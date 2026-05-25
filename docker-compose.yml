@@ -1,0 +1,26 @@
+services:
+  collector:
+    build: .
+    container_name: pelagica_collector
+    environment:
+      - DATABASE_URL=postgresql://pelagica:thisisasupersecretpasswordnoonewilleverbeabletoguess@postgres:5432/pelagica
+      - PING_TOKEN=2f64e07c-e930-463f-b118-556a741fb2aa
+      - PORT=8000
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+  postgres:
+    image: postgres:16
+    container_name: pelagica_collector_postgres
+    environment:
+      POSTGRES_USER: pelagica
+      POSTGRES_PASSWORD: thisisasupersecretpasswordnoonewilleverbeabletoguess
+      POSTGRES_DB: pelagica
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_db_data:
