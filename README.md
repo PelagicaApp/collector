@@ -90,6 +90,7 @@ All configuration is done via environment variables.
 |---|---|---|
 | `DATABASE_URL` | Yes | Postgres connection string, e.g. `postgres://user:pass@host:5432/db` |
 | `BEHIND_PROXY` | No | Set to `true` if running behind a reverse proxy. Enables `X-Forwarded-For` trust. Default: `false` |
+| `TRUSTED_PROXIES` | No | Comma-separated list of trusted proxy IPs or CIDR ranges if `BEHIND_PROXY=true`. Default: empty (trust all proxies) |
 | `PORT` | No | Port to listen on. Default: `4000` |
 | `PING_TOKEN` | No | If set, requires this token in the `token` field of the ping payload for authentication. Default: no token required |
 

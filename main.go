@@ -6,6 +6,7 @@ import (
 	"os"
 	"pelagica-collector/db"
 	"pelagica-collector/handlers"
+	"strings"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
@@ -38,8 +39,17 @@ func main() {
 	if os.Getenv("BEHIND_PROXY") == "true" {
 		fiberCfg.ProxyHeader = fiber.HeaderXForwardedFor
 		fiberCfg.TrustProxy = true
+
+		proxies := []string{"127.0.0.1", "::1"}
+
+		if extra := os.Getenv("TRUSTED_PROXIES"); extra != "" {
+			for _, p := range strings.Split(extra, ",") {
+				proxies = append(proxies, strings.TrimSpace(p))
+			}
+		}
+
 		fiberCfg.TrustProxyConfig = fiber.TrustProxyConfig{
-			Proxies: []string{"127.0.0.1", "::1"},
+			Proxies: proxies,
 		}
 	}
 
