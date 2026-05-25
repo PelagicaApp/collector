@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"log"
+	"os"
 	"pelagica-collector/db"
 	"pelagica-collector/models"
 	"regexp"
@@ -72,6 +73,10 @@ func (h *Handler) Ping(c fiber.Ctx) error {
 	if !validUUID.MatchString(req.InstanceID) ||
 		!validVersion.MatchString(req.Version) {
 		return c.Status(fiber.StatusBadRequest).SendString("invalid payload")
+	}
+
+	if os.Getenv("PING_TOKEN") != "" && req.Token != os.Getenv("PING_TOKEN") {
+		return c.Status(fiber.StatusUnauthorized).SendString("invalid token")
 	}
 
 	if err := h.DB.RecordPing(c.Context(), req.InstanceID, req.Version); err != nil {
