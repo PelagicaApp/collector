@@ -61,6 +61,9 @@ func (l *ipLimiter) allow(ip string) bool {
 
 func (h *Handler) Ping(c fiber.Ctx) error {
 	if !h.limiter.allow(c.IP()) {
+		if os.Getenv("LOG_RATE_LIMIT") == "true" {
+			log.Printf("Rate limit exceeded for IP: %s", c.IP())
+		}
 		return c.Status(fiber.StatusTooManyRequests).SendString("rate limit exceeded")
 	}
 
