@@ -22,9 +22,7 @@ func main() {
 		log.Fatalf("migration failed: %v", err)
 	}
 
-	h := &handlers.Handler{
-		DB: database,
-	}
+	h := handlers.NewHandler(database)
 
 	app := fiber.New()
 
