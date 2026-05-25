@@ -20,6 +20,14 @@ func getPort() string {
 	return ":" + port
 }
 
+func getProxyHeader() string {
+	proxyHeader := os.Getenv("PROXY_HEADER")
+	if proxyHeader == "" {
+		return fiber.HeaderXForwardedFor
+	}
+	return proxyHeader
+}
+
 func main() {
 	ctx := context.Background()
 
@@ -37,7 +45,7 @@ func main() {
 
 	fiberCfg := fiber.Config{}
 	if os.Getenv("BEHIND_PROXY") == "true" {
-		fiberCfg.ProxyHeader = fiber.HeaderXForwardedFor
+		fiberCfg.ProxyHeader = getProxyHeader()
 		fiberCfg.TrustProxy = true
 
 		proxies := []string{"127.0.0.1", "::1"}
