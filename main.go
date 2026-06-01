@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"log"
 	"os"
 	"pelagica-collector/db"
@@ -11,6 +12,9 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 )
+
+//go:embed public/stats.html
+var statsPage []byte
 
 func getPort() string {
 	port := os.Getenv("PORT")
@@ -72,6 +76,10 @@ func main() {
 		TimeFormat: "2006-01-02 15:04:05",
 	}))
 
+	app.Get("/", func(c fiber.Ctx) error {
+		c.Set("Content-Type", "text/html")
+		return c.Send(statsPage)
+	})
 	app.Post("/ping", h.Ping)
 	app.Get("/stats", h.Stats)
 
